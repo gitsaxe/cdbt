@@ -26,44 +26,44 @@ trait CdbtEdit {
   public function editable_data_list() {
     list($attributes, $content) = func_get_args();
     extract( shortcode_atts([
-      'table' => '', 					// @attribute string [required] Specifies the table name you want to display the data.
-      'entry_page' => '', 				// @attribute mixed  [optional] This attribute is deprecated since v2.0.x. (actually not work)
-      'bootstrap_style' => true, 		// @attribute bool   [optional] Renders the data via the style of bootstrap if true; Because this attribute is for the "cdbt-view", it does not work.
-      'display_list_num' => false, 		// @attribute bool   [optional] Adds an auto increment number column at the left edge of the data row if true.
-      'display_title' => true, 			// @attribute bool   [optional] Displays the heading of content as a title if true.
-      'enable_sort' => true, 			// @attribute bool   [optional] It'll be able to sort of data by clicking on the header row if true.
-      'exclude_cols' => '', 			// @attribute string [optional] Specifies the comma-delimited column names if you want to hide the column. e.g. "column1,column2,column3,..."
-      'add_class' => '', 				// @attribute string [optional] Specifies a CSS class name for styling the element of listed data table. If there are multiple class, please separated by a single-byte space.
+      'table' => '',          // @attribute string [required] Specifies the table name you want to display the data.
+      'entry_page' => '',         // @attribute mixed  [optional] This attribute is deprecated since v2.0.x. (actually not work)
+      'bootstrap_style' => true,    // @attribute bool   [optional] Renders the data via the style of bootstrap if true; Because this attribute is for the "cdbt-view", it does not work.
+      'display_list_num' => false,    // @attribute bool   [optional] Adds an auto increment number column at the left edge of the data row if true.
+      'display_title' => true,      // @attribute bool   [optional] Displays the heading of content as a title if true.
+      'enable_sort' => true,      // @attribute bool   [optional] It'll be able to sort of data by clicking on the header row if true.
+      'exclude_cols' => '',       // @attribute string [optional] Specifies the comma-delimited column names if you want to hide the column. e.g. "column1,column2,column3,..."
+      'add_class' => '',        // @attribute string [optional] Specifies a CSS class name for styling the element of listed data table. If there are multiple class, please separated by a single-byte space.
       /* The Added new attributes since v2.0.x are followed: */
-      'display_filter' => false, 		// @attribute bool   [optional] Adds a dropdown list box for filtering the data if true. Then there should be specified the column to filter if you want to enable this.
-      'filter_column' => '', 			// @attribute string [optional] Specifies a column name for filtering the data.
-      'filters' => '', 					// @attribute string [optional] Specifies the keyword lists for filtering the data. Also, a plurality of the pairs of the keyword and the display label can be defined by using the comma-delimited. e.g. "filter-keyword1:display-label1,filter-keyword2:display-label2,..."
-      'ajax_load' => false, 			// @attribute bool   [optional] Use the Ajax to load the table data if true. If activated, you can improve performance when dealing with large tables of data size. (Not Implemented yet)
-      'csid' => 0, 						// @attribute int    [optional] This is the alias number to call a custom shortcode settings that are stored in this plugin.
+      'display_filter' => false,    // @attribute bool   [optional] Adds a dropdown list box for filtering the data if true. Then there should be specified the column to filter if you want to enable this.
+      'filter_column' => '',      // @attribute string [optional] Specifies a column name for filtering the data.
+      'filters' => '',          // @attribute string [optional] Specifies the keyword lists for filtering the data. Also, a plurality of the pairs of the keyword and the display label can be defined by using the comma-delimited. e.g. "filter-keyword1:display-label1,filter-keyword2:display-label2,..."
+      'ajax_load' => false,       // @attribute bool   [optional] Use the Ajax to load the table data if true. If activated, you can improve performance when dealing with large tables of data size. (Not Implemented yet)
+      'csid' => 0,            // @attribute int    [optional] This is the alias number to call a custom shortcode settings that are stored in this plugin.
       /* The Added new attributes since v2.0.6 are followed: */
-      'narrow_keyword' => '', 			// @attribute string [optional] Specifies the narrowing condition of the output data in a comma-delimited. If there are the multiple condition, it'll be evaluated at the "AND" condition. e.g. "keyword1,keyword2,..." or "column1:keyword1,column2:keyword2,..."
-      'sort_order' => 'created:desc', 	// @attribute string [optional] Specifies in the pair of column name and the ascending(asc) or descending(desc) order, for the display order of the initial data. If there are multiple condition, please use the comma-delimited. e.g. "updated:desc,ID:asc,..."
+      'narrow_keyword' => '',       // @attribute string [optional] Specifies the narrowing condition of the output data in a comma-delimited. If there are the multiple condition, it'll be evaluated at the "AND" condition. e.g. "keyword1,keyword2,..." or "column1:keyword1,column2:keyword2,..."
+      'sort_order' => 'created:desc',   // @attribute string [optional] Specifies in the pair of column name and the ascending(asc) or descending(desc) order, for the display order of the initial data. If there are multiple condition, please use the comma-delimited. e.g. "updated:desc,ID:asc,..."
       /* The Added new attributes since v2.0.7 are followed: */
-      'narrow_operator' => 'and', 		// @attribute string [optional] You can specify the value of either "and" or "or", as evaluated condition of multiple narrowing keywords.
-      // 'strip_tags' => true, 			// @attribute bool   [optional] Whether to strip the tags in the string type data.
+      'narrow_operator' => 'and',     // @attribute string [optional] You can specify the value of either "and" or "or", as evaluated condition of multiple narrowing keywords.
+      // 'strip_tags' => true,      // @attribute bool   [optional] Whether to strip the tags in the string type data.
       /* The Added new attribute since v2.0.10 is followed: */
-      'truncate_strings' => 40, 		// @attribute int    [optional] Truncates the display data if the strings type data is longer than the specified characters (not bytes). If value is zero it does not truncate.
+      'truncate_strings' => 40,     // @attribute int    [optional] Truncates the display data if the strings type data is longer than the specified characters (not bytes). If value is zero it does not truncate.
       /* The Added new attributes since v2.1.31 are followed: */
-      'enable_repeater' => false, 		// @attribute bool   [optional] Renders the data of table by using repeater component of the "FuelUX" libraries if true. Or render by using the original dynamic table component of this plugin if false (since v2.1.x).
-      'display_search' => true, 		// @attribute bool   [optional] Adds an input field for the data search if true.
-      'display_index_row' => true, 		// @attribute mixed  [optional] Displays the index row around the data rows as the header of the data column, if true. Also it's added of "head-only" for the table format besides boolean value. (since v2.1.x)
-      'order_cols' => '', 				// @attribute string [optional] Specifies the comma-delimited column names in the display order if you want to display columns in the order of your display request. This overrides the value of the attribute "exclude_cols" and "display_cols". e.g. "col3,col2,col1,..."
-      'limit_items' => '', 				// @attribute int    [optional] If this attribute is specified, it overrides the "Maximum display data per page" of the table.
-      'display_view' => false, 			// @attribute bool   [optional] You can switch to the thumbnail list view of the gallery format if there contained an image in the table data.
-      'thumbnail_column' => '', 		// @attribute string [optional] Specifies a column as the thumbnail image. In this column it should be stored the image binary or a URL of image.
-      'thumbnail_title_column' => '', 	// @attribute string [optional] Specifies a column as displayed title on the thumbnail list view. it displays nothing if this is not fill.
-      'thumbnail_width' => 100, 		// @attribute int    [optional] Specifies a width of the thumbnail image, also the default size of thumbnail will be square equal to this width.
+      'enable_repeater' => false,     // @attribute bool   [optional] Renders the data of table by using repeater component of the "FuelUX" libraries if true. Or render by using the original dynamic table component of this plugin if false (since v2.1.x).
+      'display_search' => true,     // @attribute bool   [optional] Adds an input field for the data search if true.
+      'display_index_row' => true,    // @attribute mixed  [optional] Displays the index row around the data rows as the header of the data column, if true. Also it's added of "head-only" for the table format besides boolean value. (since v2.1.x)
+      'order_cols' => '',         // @attribute string [optional] Specifies the comma-delimited column names in the display order if you want to display columns in the order of your display request. This overrides the value of the attribute "exclude_cols" and "display_cols". e.g. "col3,col2,col1,..."
+      'limit_items' => '',        // @attribute int    [optional] If this attribute is specified, it overrides the "Maximum display data per page" of the table.
+      'display_view' => false,      // @attribute bool   [optional] You can switch to the thumbnail list view of the gallery format if there contained an image in the table data.
+      'thumbnail_column' => '',     // @attribute string [optional] Specifies a column as the thumbnail image. In this column it should be stored the image binary or a URL of image.
+      'thumbnail_title_column' => '',   // @attribute string [optional] Specifies a column as displayed title on the thumbnail list view. it displays nothing if this is not fill.
+      'thumbnail_width' => 100,     // @attribute int    [optional] Specifies a width of the thumbnail image, also the default size of thumbnail will be square equal to this width.
       /* The Added new attributes since v2.1.32 is followed: */
-      'strip_tags' => true, 			// @attribute bool   [optional] Whether to strip the tags in the string type data.
-      'draggable' => true, 				// @attribute bool	 [optional] You can drag overflow content if this is enabled. Default is true. Note: this attribute is enabled for table layout only.
-      'clickable_cols' => '', 			// @attribute string [optional] Specifies the comma-delimited column names if you want to be able to click the column value. Also in those columns, it should be stored the string as like the url. e.g. "column1,column2,column3,..."
-      'footer_interface' => 'pagination', 	// @attribute string [optional] You can specify which is "pagination (default)" or "pager". Note: this attribute is enabled for table layout only.
-      'truncate_cols' => '', 			// @attribute string [optional] Specifies the comma-delimited column names if you want to specify the columns truncating the strings. e.g. "column1,column2,column3,..."
+      'strip_tags' => true,       // @attribute bool   [optional] Whether to strip the tags in the string type data.
+      'draggable' => true,        // @attribute bool   [optional] You can drag overflow content if this is enabled. Default is true. Note: this attribute is enabled for table layout only.
+      'clickable_cols' => '',       // @attribute string [optional] Specifies the comma-delimited column names if you want to be able to click the column value. Also in those columns, it should be stored the string as like the url. e.g. "column1,column2,column3,..."
+      'footer_interface' => 'pagination',   // @attribute string [optional] You can specify which is "pagination (default)" or "pager". Note: this attribute is enabled for table layout only.
+      'truncate_cols' => '',      // @attribute string [optional] Specifies the comma-delimited column names if you want to specify the columns truncating the strings. e.g. "column1,column2,column3,..."
       ], $attributes) );
     if (empty($table) || !$this->check_table_exists($table)) 
       return;
@@ -84,12 +84,12 @@ trait CdbtEdit {
       $truncate_strings = empty( $truncate_strings ) || intval( $truncate_strings ) < 0 ? 0 : intval( $truncate_strings );
       $strip_tags = array_key_exists( 'sanitization', $table_option ) ? $table_option['sanitization'] : $strip_tags;
       foreach ($table_schema as $column => $scheme) {
-      	if ($this->validate->check_column_type($scheme['type'], 'char'))
-      	  $has_char[] = $column;
-      	
-      	if ($this->validate->check_column_type($scheme['type'], 'text'))
-      	  $has_text[] = $column;
-      	
+        if ($this->validate->check_column_type($scheme['type'], 'char'))
+          $has_char[] = $column;
+        
+        if ($this->validate->check_column_type($scheme['type'], 'text'))
+          $has_text[] = $column;
+        
         if ($this->validate->check_column_type($scheme['type'], 'blob')) 
           $has_bin[] = $column;
         
@@ -115,12 +115,12 @@ trait CdbtEdit {
           $has_pk = true;
           $pk_columns[] = $column;
         }
-      	if ($this->validate->check_column_type($scheme['type'], 'char')) 
-      	  $has_char[] = $column;
-      	
-      	if ($this->validate->check_column_type($scheme['type'], 'text')) 
-      	  $has_text[] = $column;
-      	
+        if ($this->validate->check_column_type($scheme['type'], 'char')) 
+          $has_char[] = $column;
+        
+        if ($this->validate->check_column_type($scheme['type'], 'text')) 
+          $has_text[] = $column;
+        
         if ($this->validate->check_column_type($scheme['type'], 'blob')) 
           $has_bin[] = $column;
         
@@ -178,7 +178,7 @@ trait CdbtEdit {
     $hash_atts = [ 'narrow_keyword', 'sort_order', 'filters' ];
     foreach ($hash_atts as $attribute_name) {
       // @since 2.1.34 Updated
-   	  $_tmp_str = rawurldecode( ${$attribute_name} );
+      $_tmp_str = rawurldecode( ${$attribute_name} );
       if ( 'filters' === $attribute_name ) {
         $_tmp_ary = explode( ',', $_tmp_str );
         if ( ! empty( $_tmp_ary ) && strpos( $_tmp_ary[0], ':' ) ) {
@@ -294,6 +294,7 @@ trait CdbtEdit {
       }
     }
     
+
     // Added since version 2.0.6
     $narrow_keyword = $this->is_assoc( $narrow_keyword ) ? $narrow_keyword : $this->strtohash( $narrow_keyword );
     if ( empty( $narrow_keyword ) ) {
@@ -341,6 +342,16 @@ trait CdbtEdit {
     // @since 2.1.32 Add new
     $conditions = apply_filters( 'cdbt_shortcode_query_conditions', $conditions, $narrow_operator, $shortcode_name, $table );
     
+    if($table=="wp_user_district"){
+      $user_data= wp_get_current_user();
+      $user_roles=$user_data->roles;
+      if(!in_array("administrator", $user_roles))
+      {
+          $user_id = $user_data->ID;  
+          $conditions['User_Id']=$user_id;  
+      }
+     }
+
     // Added for loading data via Ajax since 2.1.32
     // Fixed a bug at v2.1.34
     if ( $ajax_load ) {
@@ -368,7 +379,7 @@ trait CdbtEdit {
         $_res = $this->get_data( $table, 'COUNT(`'. $_cnt_col .'`)', $conditions, $narrow_operator, 'OBJECT_K' );
         $total_data = ! empty( $_res ) ? intval( array_keys( $_res )[0] ) : $total_data;
       } else {
-      	$_res = $this->find_data( $table, $conditions, $narrow_operator, $_cnt_col );
+        $_res = $this->find_data( $table, $conditions, $narrow_operator, $_cnt_col );
         $total_data = count( $_res );
       }
       $query_assets = [ $query_type, $output_columns, $conditions, $narrow_operator, $orders, $_limit_clause ];
@@ -583,7 +594,7 @@ trait CdbtEdit {
       }
       if (empty($condition_keys)) {
         foreach ($table_schema as $column => $scheme) {
-      	  if (!$this->validate->check_column_type( $scheme['type'], 'blob' )) 
+          if (!$this->validate->check_column_type( $scheme['type'], 'blob' )) 
             $condition_keys[] = $column; // Considerably low matching
         }
       }

@@ -249,7 +249,7 @@ trait CdbtView {
     if ( $display_title ) {
       $disp_title = $this->get_table_comment( $table );
       $disp_title = ! empty( $disp_title ) ? $disp_title : $table;
-      $title = '<h4 class="sub-description-title">' . sprintf( __('View Data in "%s" Table', CDBT), $disp_title ) . '</h4>';
+     // $title = '<h4 class="sub-description-title">' . sprintf( __('View Data in "%s" Table', CDBT), $disp_title ) . '</h4>';
     }
     
     $all_columns = array_keys( $table_schema );
@@ -345,7 +345,7 @@ trait CdbtView {
           unset( $truncate_cols[$_j] );
       }
     }
-    
+
     // Filter conditions issued query via this shortcode
     // 
     // @since 2.1.32 Add new
