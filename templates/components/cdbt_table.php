@@ -305,6 +305,11 @@ $adjust_thumbnail = apply_filters( 'cdbt_crop_thumbnail_position', [ 'landscape'
     </div><!-- /.row -->
   </div><!-- /.panel-heading -->
 <?php endif; ?>
+<?php if ( $_must_paging ) : ?>
+  <div class="panel-footer" for="<?php echo $table_id; ?>">
+    <nav class="cdbt-<?php echo $footer_ui; ?> text-center" for="<?php echo $table_id; ?>"></nav>
+  </div><!-- /.panel-footer -->
+<?php endif; ?>
   <div class="panel-body" for="<?php echo $table_id; ?>">
   <?php if ( $disable_edit ) : ?>
     <p class="text-danger" style="margin-top: 6px;"><?php _e( 'Disable the data editing because it can not identify a single data.', CDBT ); ?></p>

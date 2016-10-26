@@ -218,6 +218,10 @@ if ($use_bootstrap) {
     }
     $add_attributes = implode(' ', $input_attributes);
     
+    if($element['elementLabel']=="Username") {
+      $element['elementType']="hidden";
+    } 	
+
     switch ($element['elementType']) {
 /**
  * Render the Form using Bootstrap style

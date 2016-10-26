@@ -754,14 +754,24 @@ class CdbtDB extends CdbtConfig {
       $limit_clause .= ( ! empty( $offset ) ) ? intval( $offset ) .', '. intval( $limit ) : intval( $limit );
     }
     
+     $join_clause="";
+
+    if($table_name=="wp_user_district" && empty($conditions)) {
+       $select_clause=str_replace('`id`', 'wp_user_district.`id`', $select_clause);
+       $select_clause=str_replace('`Username`', 'wp_users.`user_nicename` as Username', $select_clause);
+       $join_clause=" INNER JOIN wp_users ON wp_users.id=wp_user_district.User_Id ";
+    }
+
     $sql = sprintf(
-      "SELECT %s FROM `%s` %s %s %s", 
+      "SELECT %s FROM `%s` %s %s %s %s", 
       $select_clause, 
       $table_name, 
+      $join_clause, 
       $where_clause, 
       $order_clause, 
       $limit_clause 
     );
+
     // Filter of sql statement created by method `get_data`.
     //
     // @since 2.0.0
@@ -857,7 +867,14 @@ class CdbtDB extends CdbtConfig {
       $limit_clause = "LIMIT ";
       $limit_clause .= ! empty( $offset ) ? intval( $offset ) .', '. intval( $limit ) : intval( $limit );
     }
-    
+     $join_clause="";
+
+      if($table_name=="wp_user_district") {
+         $select_clause=str_replace('`id`', 'wp_user_district.`id`', $select_clause);
+          $select_clause=str_replace('`Username`', 'wp_users.`user_nicename` as Username', $select_clause);
+         $join_clause=" INNER JOIN wp_users ON wp_users.id=wp_user_district.User_Id ";
+      }
+
     // Filter whether to concat columns or not
     // 
     // @since 2.1.33
@@ -927,22 +944,26 @@ class CdbtDB extends CdbtConfig {
         $operator = in_array( strtolower( $operator ), [ 'and', 'or' ] ) ? strtoupper( $operator ) : 'AND';
         $operator = $is_concat ? 'AND' : $operator;
         $where_clause = 'WHERE '. implode( " $operator ", $_conditions ) .' ';
-        $_select_statements = sprintf( 'SELECT %s FROM `%s` %s ', $select_clause, $table_name, $where_clause );
+        $_select_statements = sprintf( 'SELECT %s FROM `%s` %s %s ', $select_clause, $table_name, $join_clause,$where_clause );
       } else {
-        $_select_statements = sprintf( 'SELECT %s FROM `%s` ', $select_clause, $table_name );
+        $_select_statements = sprintf( 'SELECT %s FROM `%s` %s ', $select_clause, $table_name,$join_clause );
       }
       $sql = $_select_statements . $order_clause .' '. $limit_clause;
     }
     
     if ( ! isset( $sql ) || empty( $sql ) ) {
+      
       $sql = sprintf(
-        "SELECT %s FROM `%s` %s %s %s", 
+        "SELECT %s FROM `%s` %s %s %s %s", 
         $select_clause, 
         $table_name, 
+        $join_clause,
         $where_clause, 
         $order_clause, 
         $limit_clause 
       );
+
+
     }
     // Filter of sql statement created by method `find_data`.
     //
@@ -1268,11 +1289,19 @@ class CdbtDB extends CdbtConfig {
     // 
     // @since 2.0.5
     $where_data = apply_filters( 'cdbt_before_update_where', $where_data, $table_name, $where_field_format );
-    
     $_diff_result = array_diff_key($data, $data_field_format);
     if ($is_update_to_null) {
       add_filter('query', array($this, 'update_at_null_data'));
     }
+
+    if(!empty($data)) {
+ 	foreach($data as $key=>$value){
+         if(empty($value) || $value=="NULL") {
+           unset($data[$key]);
+          }
+	}
+    }	
+
     if (empty($_diff_result)) {
       $_diff_result = array_diff_key($where_data, $where_field_format);
       if (empty($_diff_result)) {
@@ -1281,8 +1310,9 @@ class CdbtDB extends CdbtConfig {
         $result = $this->wpdb->update( $table_name, $data, $where_data, array_values($data_field_format) );
       }
     } else {
+
       $result = $this->wpdb->update( $table_name, $data, $where_data );
-    }
+}
     if ($is_update_to_null) {
       remove_filter('query', array($this, 'update_at_null_data'));
     }
@@ -1292,7 +1322,7 @@ class CdbtDB extends CdbtConfig {
       $message .= $this->retrieve_db_error();
       $this->logger( $message );
     }
-    
+    //echo $message; exit;
     // Fire after the updated data
     //
     // @since 2.0.0
